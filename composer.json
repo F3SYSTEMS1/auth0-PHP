@@ -32,6 +32,7 @@
     "ext-json": "*",
     "ext-mbstring": "*",
     "ext-openssl": "*",
+    "illuminate/support": "^11.9",
     "php-http/multipart-stream-builder": "^1",
     "psr-discovery/all": "^1",
     "psr/http-client-implementation": "^1",

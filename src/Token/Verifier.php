@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Token;
 
+use Illuminate\Support\Facades\Http;
 use const OPENSSL_ALGO_SHA256;
 use const OPENSSL_ALGO_SHA384;
 use const OPENSSL_ALGO_SHA512;
@@ -206,11 +207,14 @@ final class Verifier
             }
         }
 
-        $keys = (new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', $path, [], $scheme . '://' . $host, $this->mockedHttpResponses))->call();
+        // $keys = (new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', $path, [], $scheme . '://' . $host, $this->mockedHttpResponses))->call();
+        $keys = Http::get($scheme . '://' . $host . $path);
 
-        if (HttpResponse::wasSuccessful($keys)) {
+        // if (HttpResponse::wasSuccessful($keys)) {
+        if ($keys->successful()) {
             try {
-                $keys = HttpResponse::decodeContent($keys);
+                // $keys = HttpResponse::decodeContent($keys);
+                $keys = json_decode($keys->body(), true, 512, JSON_THROW_ON_ERROR);
             } catch (Throwable) {
                 return [];
             }
